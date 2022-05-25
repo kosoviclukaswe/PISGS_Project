@@ -1,0 +1,88 @@
+﻿@{
+    ViewData["Title"] = "My account";
+}
+@model ServiceLayer.AppUserDto
+<head>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="~/css/profile.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="container bootstrap snippets bootdeys">
+        <div class="row">
+            <div class="col-xs-12 col-sm-12">
+                <form class="form-horizontal">
+                    <div class="panel panel-default">
+                        <div class="panel-body text-center">
+                            <img src="https://bootdey.com/img/Content/avatar/avatar6.png" class="img-circle profile-avatar" alt="User avatar">
+                        </div>
+                        <div class="panel-body text-center">
+                            <button class="btn btn-info m-1">Select image</button>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">User details</h4>
+                        </div>
+                        <div class="panel-body">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Role*</label>
+                                <div class="col-sm-10">
+                                    <select class="form-control">
+                                        <option selected="">Select role</option>
+                                        <option>ADMINISTRATOR</option>
+                                        <option>DELIVERER</option>
+                                        <option>CONSUMER</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Username*</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" value="@Model.UserName">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Full name*</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" value="@Model.Fullname">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Email*</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" value="@Model.Email">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Address*</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" value="@Model.Address">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Birthdate*</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" value="@Model.Birthdate">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">Security</h4>
+                        </div>
+                        <div class="panel-body">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Password*</label>
+                                <div class="col-sm-10">
+                                    <input type="password" class="form-control" value="@Model.Password">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+

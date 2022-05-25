@@ -1,0 +1,98 @@
+﻿@model SignUpViewModel 
+@{
+    var ageRestricted = DateTime.Now.AddYears(-18).ToString("yyyy-MM-dd");
+}
+<head>
+    <scripts src="~/lib/jquery/dist/jquery.min.js"></scripts>
+</head>
+<form method="post" enctype="multipart/form-data" asp-controller="Home" asp-action="SignUp">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="mb-3">
+        <label asp-for="Username" for="username" class="form-label">Username</label>
+        <input asp-for="Username" id="username" type="text" class="form-control" />
+        <span asp-validation-for="Username" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Email" for="email" class="form-label">Email</label>
+        <input asp-for="Email" id="email" type="email" class="form-control" />
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Password" for="password" class="form-label">Password</label>
+        <input asp-for="Password" id="password" type="password" class="form-control" />
+        <span asp-validation-for="Password" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="ConfirmPassword" for="confirmPassword" class="form-label">Confirm password</label>
+        <input asp-for="ConfirmPassword" id="confirmPassword" type="password" class="form-control" />
+        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Fullname" for="fullname" class="form-label">Name and surname</label>
+        <input asp-for="Fullname" id="fullname" type="text" class="form-control" />
+        <span asp-validation-for="Fullname" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Birthdate" for="birthdate" class="form-label">Birthdate</label>
+        <input asp-for="Birthdate" id="birthdate" type="date" value="@ageRestricted" max="@ageRestricted" class="form-control" />
+        <span asp-validation-for="Birthdate" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Address" for="address" class="form-label">Address</label>
+        <input asp-for="Address" id="address" type="text" class="form-control" />
+        <span asp-validation-for="Address" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Role" for="role" class="form-label">Role</label>
+        <select asp-for="Role" class="form-control" name="role" id="role">
+            <option value="DELIVERER">Deliverer</option>
+            <option value="CONSUMER">Consumer</option>
+        </select>
+    </div>
+    <div class="mb-3">
+        <label asp-for="ImagePath" for="image" class="form-label" style="display: block;">Image</label>
+        <div class="text-center">
+            <script type="text/javascript">
+                function uploadImage() {
+                    var imageFile = document.getElementById('imageFile').files[0];
+                    if (imageFile != null) {
+
+                        var data = new FormData();
+                        data.append("imageFile", imageFile);
+
+                        $.ajax({
+                            type: "POST",
+                            url: '/Home/UploadImage',
+                            contentType: false,
+                            processData: false,
+                            data: data,
+                            success: function () {
+                                console.log("success");
+                                var imagePath = "/images/" + imageFile.name;
+                                document.getElementById("userImage").src = imagePath
+                                document.getElementById("ImagePath").value = imagePath;
+                            },
+                            error: function (xhr, textStatus, errorThrown) {
+                                alert(textStatus);
+                            }
+                        });
+                    }
+                }
+            </script>
+            <input type="file" name="imageFile" id="imageFile" onchange="uploadImage()">
+            <img src="~/images/user.jpg" style="width: 340px; height: 340px;" alt="UserImage" id="userImage" />
+            <input asp-for="ImagePath" id="ImagePath" type="text" hidden>
+        </div>
+    </div>
+    <div class="mb-3">
+        <button type="submit" class="btn btn-primary">Sign Up</button>
+    </div>
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <a class="btn btn-outline-dark" href="/users/googleauth" role="button" style="text-transform:none">
+                <img style="margin-bottom:3px; margin-right:5px; width:20px; height: 20px;" alt="Google sign-in" src="~/images/google-logo.png" />
+                Sign Up with Google
+            </a>
+        </div>
+    </div>
+</form>

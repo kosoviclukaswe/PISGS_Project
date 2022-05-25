@@ -1,0 +1,15 @@
+C:\Users\Luka Kosovic\Desktop\PUSGS_Project\DataAcesss\bin\Debug\net5.0\DataAcesss.deps.json
+C:\Users\Luka Kosovic\Desktop\PUSGS_Project\DataAcesss\bin\Debug\net5.0\DataAcesss.runtimeconfig.json
+C:\Users\Luka Kosovic\Desktop\PUSGS_Project\DataAcesss\bin\Debug\net5.0\DataAcesss.runtimeconfig.dev.json
+C:\Users\Luka Kosovic\Desktop\PUSGS_Project\DataAcesss\bin\Debug\net5.0\DataAcesss.dll
+C:\Users\Luka Kosovic\Desktop\PUSGS_Project\DataAcesss\bin\Debug\net5.0\ref\DataAcesss.dll
+C:\Users\Luka Kosovic\Desktop\PUSGS_Project\DataAcesss\bin\Debug\net5.0\DataAcesss.pdb
+C:\Users\Luka Kosovic\Desktop\PUSGS_Project\DataAcesss\obj\Debug\net5.0\DataAcesss.csprojAssemblyReference.cache
+C:\Users\Luka Kosovic\Desktop\PUSGS_Project\DataAcesss\obj\Debug\net5.0\DataAcesss.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Luka Kosovic\Desktop\PUSGS_Project\DataAcesss\obj\Debug\net5.0\DataAcesss.AssemblyInfoInputs.cache
+C:\Users\Luka Kosovic\Desktop\PUSGS_Project\DataAcesss\obj\Debug\net5.0\DataAcesss.AssemblyInfo.cs
+C:\Users\Luka Kosovic\Desktop\PUSGS_Project\DataAcesss\obj\Debug\net5.0\DataAcesss.csproj.CoreCompileInputs.cache
+C:\Users\Luka Kosovic\Desktop\PUSGS_Project\DataAcesss\obj\Debug\net5.0\DataAcesss.dll
+C:\Users\Luka Kosovic\Desktop\PUSGS_Project\DataAcesss\obj\Debug\net5.0\ref\DataAcesss.dll
+C:\Users\Luka Kosovic\Desktop\PUSGS_Project\DataAcesss\obj\Debug\net5.0\DataAcesss.pdb
+C:\Users\Luka Kosovic\Desktop\PUSGS_Project\DataAcesss\obj\Debug\net5.0\DataAcesss.genruntimeconfig.cache

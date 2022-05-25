@@ -1,0 +1,16 @@
+﻿@model SignInViewModel
+<form method="get">
+    <div class="mb-3">
+        <label asp-for="Email" for="email" class="form-label">Email</label>
+        <input asp-for="Email" id="email" type="email" class="form-control" />
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Password" for="password" class="form-label">Password</label>
+        <input asp-for="Password" id="password" type="password" class="form-control" />
+        <span asp-validation-for="Password" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <button type="submit" class="btn btn-primary">Sign In</button>
+    </div>
+</form>
