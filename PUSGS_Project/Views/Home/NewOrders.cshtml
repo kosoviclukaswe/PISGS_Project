@@ -1,0 +1,95 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["Title"] = "New Orders";
+}
+
+
+@using DataAcesss.Data
+@model PUSGS_Project.Models.ActiveOrdersModel
+<style>
+    tr:hover {
+        background-color: #1f0160;
+    }
+</style>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-12">
+            @{
+                if (Model == null || Model.Orders == null || Model.Orders.Count == 0)
+                {
+                    <p>Currently, you <b class="text-dark">don't have new</b> orders.</p>
+                }
+                else
+                {
+                    <label for="newOrdersTable"><b>Your new orders (@Model.Orders.Count.ToString())</b></label>
+                    <table class="table table-dark" id="newOrdersTable">
+                        <tr>
+                            <th class="text-center">Address</th>
+                            <th class="text-center">Price</th>
+                            <th class="text-center">Comment</th>
+                            <th class="text-center">Time (minutes)</th>
+                            <th class="text-center">Order Status</th>
+                            <th class="text-center">Products</th>
+                        </tr>
+                        @{
+                            foreach (Order order in Model.Orders)
+                            {
+                                                <tr id="@order.OrderId" onclick="CurrentOrder('@order.OrderId')">
+                                                    <td class="text-center">@order.Address</td>
+                                                    <td class="text-center">@order.Price.ToString()</td>
+                                                    <td class="text-center">@order.Comment</td>
+                                                    <td class="text-center">@order.Time.ToString()</td>
+                                                    <td class="text-center">
+                                                        @{
+                                                            if (order.OrderState.ToString() == OrderState.ON_HOLD.ToString())
+                                                            {
+                                                                <b class="text-warning">Pending</b>
+                                                            }
+                                                            else
+                                                            {
+                                                                <b class="text-light">Status changed</b>
+                                                            }
+                                                        }
+                                                    </td>
+                                                    <td class="text-left">
+                                                        @{
+                                                            if (Model.Products != null && Model.Products.Count > 0)
+                                                            {
+                                                                <ul>
+                                                                    @{
+                                                                        foreach (var productData in Model.Products[order.OrderId])
+                                                                        {
+                                                                            <li>@productData.Key.Name x @productData.Value</li>
+                                                                        }
+                                                                    }
+                                                                </ul>
+                                                            }
+                                                            else
+                                                            {
+                                                                <p class="text-danger">No products available.</p>
+                                                            }
+
+
+                                                        }
+
+                                                    </td>
+                                                </tr>
+                            }
+                        }
+                    </table>
+                    <script type="text/javascript">
+                        function CurrentOrder(orderId) {
+                            document.getElementById("orderId").value = orderId;
+                            document.getElementById("currentOrderForm").submit();
+                        }
+                    </script>
+                }
+            }
+        </div>
+    </div>
+</div>
+<form id="currentOrderForm" asp-action="CurrentOrder" asp-controller="Home" method="post" hidden>
+    <input type="text" id="orderId" name="orderId" value="" />
+</form>

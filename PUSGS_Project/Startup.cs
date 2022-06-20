@@ -3,15 +3,19 @@ using DataAcesss.Repos;
 using DataAcesss.Repos.Contracts;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using PUSGS_Project.Mapper;
 using ServiceLayer;
 using ServiceLayer.Contracts;
 using ServiceLayer.Services;
+using ServiceLayer.Settings;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,10 +40,35 @@ namespace PUSGS_Project
                 options.UseSqlServer(Configuration.GetConnectionString("PUSGS_Project"));
             });
 
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
+            // Data Access Layer
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<ISignUpRequestRepository, SignUpRequestRepository>();
+            services.AddScoped<IProductRepository, ProductRepository>();
+            services.AddScoped<IOrderRepository, OrderRepository>();
+            services.AddScoped<IProductOrderRepository, ProductOrderRepository>();
+
+            // Service Layer
+            services.AddScoped<IProductService, ProductService>();
+            services.AddScoped<IOrderService, OrderService>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<ISignUpRequestService, SignUpRequestService>();
+            services.AddTransient<IEmailService, EmailService>();
+            services.AddTransient<IProductOrderService, ProductOrderService>();
+
+            services.Configure<MailSettings>(Configuration.GetSection("MailSettings"));
 
             services.AddIdentity<AppUser, IdentityRole>().AddEntityFrameworkStores<PUSGS_ProjectContext>();
+
+            services.ConfigureApplicationCookie(options => {
+                options.AccessDeniedPath = new PathString("/Home/AccessDenied");
+            });
+
+            services.AddAuthentication().AddGoogle(options => { 
+                options.ClientId = "617568169380-rqm60eo3pj4fe0p056t9udmlcmgae1gf.apps.googleusercontent.com";
+                options.ClientSecret = "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";
+            });
 
             services.AddAutoMapper(x => x.AddProfile<AutoMapping>(), typeof(Startup));
 
@@ -57,7 +86,7 @@ namespace PUSGS_Project
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
+                //app.UseExceptionHandler("/Home/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
@@ -75,6 +104,15 @@ namespace PUSGS_Project
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+            });
+
+            app.UseStaticFiles(new StaticFileOptions()
+            {
+                OnPrepareResponse = context =>
+                {
+                    context.Context.Response.Headers.Add("Cache-Control", "no-cache, no-store");
+                    context.Context.Response.Headers.Add("Expires", "-1");
+                }
             });
         }
     }

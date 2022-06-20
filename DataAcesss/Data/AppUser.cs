@@ -14,7 +14,7 @@ namespace DataAcesss.Data
         DELIVERER,
         CONSUMER
     }
-
+    
     [Table("AppUser")]
     public partial class AppUser : IdentityUser
     {
@@ -22,15 +22,17 @@ namespace DataAcesss.Data
         [Required]
         public string Password { get; set; }
         [Column("Fullname")]
-        [Required]
         public string Fullname { get; set; }
-        [Column("Birthdate")]
         [Required]
         public DateTime Birthdate { get; set; }
-        [Column("Address")]
-        [Required]
         public string Address { get; set; }
         [Column("ImagePath")]
         public string ImagePath { get; set; }
+
+        [Index(nameof(UserName), IsUnique = true)]
+        public override string UserName { get; set; }
+
+        [Index(nameof(Email), IsUnique = true)]
+        public override string Email { get; set; }
     }
 }

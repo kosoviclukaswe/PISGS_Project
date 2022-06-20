@@ -8,12 +8,25 @@ using System.Threading.Tasks;
 
 namespace DataAcesss.Data
 {
+    public enum SignUpRequestStatus
+    {
+        APPROVED,
+        DISAPPROVED,
+        PENDING
+    }
     [Table("SignUpRequest")]
     public class SignUpRequest
     {
-        public string SignUpRequestId { get; set; }
-        public string UserId { get; set; }
-        public string RoleId { get; set; }
+        [Required]
+        public int SignUpRequestId { get; set; }
+        [Required]
         public DateTime Date { get; set; }
+        [Required]
+        public SignUpRequestStatus Status { get; set; }
+        [Required]
+        public AppUser AppUser { get; set; }
+        [Required]
+        [ForeignKey("AppUserId")]
+        public string AppUserId { get; set; }
     }
 }

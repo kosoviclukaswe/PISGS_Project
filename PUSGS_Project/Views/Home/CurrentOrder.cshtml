@@ -1,0 +1,184 @@
+﻿@{
+    ViewData["Title"] = "Current Order";
+}
+@using DataAcesss.Data;
+@model PUSGS_Project.Models.CurrentOrderModel
+@{
+    if (User.IsInRole("CONSUMER") || ViewBag.ThisOrder == null || !ViewBag.ThisOrder)
+    {
+        <h2 class="text-center">Current order</h2>
+    }
+    else
+    {
+        <h2 class="text-center">My current order</h2>
+    }
+}
+<script type="text/javascript">
+    function DisplayMessage(message) {
+        if (message != null && message != "") {
+            alert(message);
+        }
+    }
+</script>
+<div class="container" onload="DisplayMessage('@ViewBag.ConcurrentMessage')">
+    @{
+        if (Model != null)
+        {
+            <h6>Products</h6>
+            foreach (var product in Model.Products)
+            {
+                <div class="row">
+                    <div class="col-sm-8 form-group">
+                        <label for="product">Product name</label>
+                        <input type="text" class="form-control" id="product" value="@product.Key.Name" disabled>
+                    </div>
+                    <div class="col-sm-2 form-group">
+                        <label for="productPrice">Price</label>
+                        <input type="number" class="form-control" id="productPrice" value="@product.Key.Price" disabled>
+                    </div>
+                    <div class="col-sm-2 form-group">
+                        <label for="amount">Amount</label>
+                        <input type="number" class="form-control" id="amount" value="@product.Value" disabled>
+                    </div>
+                </div>
+            }
+            <div class="row">
+                <div class="col-sm-12 form-group">
+                    <hr>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12 form-group">
+                    <label for="address">Address</label>
+                    <input type="text" id="address" class="form-control" value="@Model.Address" disabled>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12 form-group">
+                    <label for="price">Delivery price</label>
+                    <input type="number" id="price" class="form-control" value="@CurrentOrderModel.FixedPrice" disabled>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12 form-group">
+                    <label for="price">Total price</label>
+                    <input type="number" id="price" class="form-control" value="@Model.Price" disabled>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12 form-group">
+                    <label for="comment">Comment</label>
+                    <input type="text" id="comment" class="form-control" value="@Model.Comment" disabled>
+                </div>
+            </div>
+            <div class="row mt-5">
+                <div class="col-sm-12 text-black-50 text-center form-group">
+                    <label for="">Delivery time</label>
+                    <h1>@Model.Time</h1>
+                    <p>
+                        Status:
+
+                        @{
+                            OrderState status = Model.Status;
+                            switch (status)
+                            {
+                                case OrderState.ACTIVE:
+                                    <b class="text-center text-primary">Order taken</b>
+                                    break;
+                                case OrderState.COMPLETE:
+                                    <b class="text-center text-success">Order delivered</b>
+                                    break;
+                                case OrderState.INCOMPLETE:
+                                    <b class="text-center text-danger">Order canceled</b>
+                                    break;
+                                case OrderState.ON_HOLD:
+                                    <b class="text-center text-warning">Pending order</b>
+                                    break;
+                                default:
+                                    break;
+                            }
+
+
+                        }
+
+                    </p>
+                </div>
+            </div>
+            if (User.IsInRole("DELIVERER"))
+            {
+                if (ViewBag.HasActiveOrder && ViewBag.ThisOrder && Model.Status == OrderState.ACTIVE)
+                {
+
+                    <div class="row">
+                        <div class="col-sm-6 form-group text-center">
+                            <button class="btn btn-success" onclick="FinishOrder(true)">Complete</button>
+                        </div>
+                        <div class="col-sm-6 form-group text-center">
+                            <button class="btn btn-danger" onclick="FinishOrder(false)">Dismiss</button>
+                        </div>
+                    </div>
+                    <script type="text/javascript">
+                        function FinishOrder(completed) {
+                            if (completed) {
+                                document.getElementById("finishedOrderStatus").value = "COMPLETE";
+                            } else {
+                                document.getElementById("finishedOrderStatus").value = "INCOMPLETE";
+                            }
+                            console.log(completed);
+                            console.log(document.getElementById("finishedOrderStatus").value);
+                            document.getElementById("finishOrderForm").submit();
+                        }
+                    </script>
+
+                    <form id="finishOrderForm" method="post" asp-action="FinishOrder" asp-controller="Home" hidden>
+                        <input type="text" id="finishedOrderStatus" name="finishedOrderStatus" value="" />
+                        <input type="number" id="takenOrderId" name="takenOrderId" value="@Model.Id" />
+                    </form>
+                }
+                if (!ViewBag.HasActiveOrder && Model.Status == OrderState.ON_HOLD)
+                {
+                    <div class="row">
+                        <div class="col-sm-12 form-group text-center">
+                            <button class="btn btn-warning" onclick="Accept()">Accept</button>
+                        </div>
+                    </div>
+                    <script type="text/javascript">
+                        function Accept() {
+                            document.getElementById("acceptOrderForm").submit();
+                        }
+                    </script>
+
+                    <form id="acceptOrderForm" method="post" asp-action="TakeOrder" asp-controller="Home" hidden>
+                        <input type="text" id="takenOrderId" name="takenOrderId" value="@Model.Id.ToString()" />
+                    </form>
+                }
+            }
+        }
+        else
+        {
+            <div class="row mt-5">
+                <div class="col-sm-12 form-group">
+                    <p class="text-center">@ViewBag.Message</p>
+                </div>
+            </div>
+        }
+    }
+    <script type="text/javascript">
+        function SetClock() {
+
+        }
+
+        function display_c() {
+            var refresh = 1000; // Refresh rate in milli seconds
+            mytime = setInterval(display_ct, refresh)
+        }
+
+        function display_ct() {
+            var x = new Date()
+            x1 = x.getHours().toString().padStart(2, 0) + ":" + x.getMinutes().toString().padStart(2, 0);
+            document.getElementById('ct').innerHTML = x1;
+            display_c();
+        }
+
+    </script>
+</div>

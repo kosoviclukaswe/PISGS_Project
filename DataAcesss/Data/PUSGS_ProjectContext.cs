@@ -19,10 +19,14 @@ namespace DataAcesss.Data
         }
 
         public virtual DbSet<AppUser> AppUsers { get; set; }
-
+        public virtual DbSet<SignUpRequest> SignUpRequests { get; set; }
+        public virtual DbSet<Product> Products { get; set; }
+        public virtual DbSet<Order> Orders { get; set; }
+        public DbSet<ProductOrder> ProductOrders { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+            builder.Entity<ProductOrder>().HasKey(pi => new { pi.ProductId, pi.OrderId });
         }
     }
 }

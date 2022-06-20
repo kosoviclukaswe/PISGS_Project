@@ -1,7 +1,11 @@
 ﻿@{
-    ViewData["Title"] = "My account";
+    ViewData["Title"] = "Profile";
 }
-@model ServiceLayer.AppUserDto
+@model ProfileViewModel
+@{ 
+    var max = DateTime.Now.AddYears(-18).ToString("yyyy-MM-dd");
+}
+
 <head>
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
     <link href="~/css/profile.css" rel="stylesheet" />
@@ -10,13 +14,41 @@
     <div class="container bootstrap snippets bootdeys">
         <div class="row">
             <div class="col-xs-12 col-sm-12">
-                <form class="form-horizontal">
+                <form class="form-horizontal" id="profileForm" method="post" asp-controller="Home" asp-action="Profile">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     <div class="panel panel-default">
                         <div class="panel-body text-center">
-                            <img src="https://bootdey.com/img/Content/avatar/avatar6.png" class="img-circle profile-avatar" alt="User avatar">
+                            <script type="text/javascript">
+                                function uploadImage() {
+                                    var imageFile = document.getElementById('imageFile').files[0];
+                                    if (imageFile != null) {
+
+                                        var data = new FormData();
+                                        data.append("imageFile", imageFile);
+
+                                        $.ajax({
+                                            type: "POST",
+                                            url: '/Home/UploadImage',
+                                            contentType: false,
+                                            processData: false,
+                                            data: data,
+                                            success: function () {
+                                                var imagePath = "/images/" + imageFile.name;
+                                                document.getElementById("userImage").src = imagePath
+                                                document.getElementById("ImagePath").value = imagePath;
+                                            },
+                                            error: function (xhr, textStatus, errorThrown) {
+                                                alert(textStatus);
+                                            }
+                                        });
+                                    }
+                                }
+                            </script>
+                            <img id="userImage" src="@Model.ImagePath" style="width: 340px; height: 340px;" class="img-circle profile-avatar" alt="User avatar">
                         </div>
-                        <div class="panel-body text-center">
-                            <button class="btn btn-info m-1">Select image</button>
+                        <div class="panel-body text-center mt-2" hidden="@ViewBag.DelivererPreview">
+                            <input type="file" name="imageFile" id="imageFile" onchange="uploadImage()" style="width: 200px;">
+                            <input type="text" value="@Model.ImagePath" asp-for="ImagePath" hidden>
                         </div>
                     </div>
                     <div class="panel panel-default">
@@ -25,59 +57,127 @@
                         </div>
                         <div class="panel-body">
                             <div class="form-group">
-                                <label class="col-sm-2 control-label">Role*</label>
-                                <div class="col-sm-10">
-                                    <select class="form-control">
-                                        <option selected="">Select role</option>
-                                        <option>ADMINISTRATOR</option>
-                                        <option>DELIVERER</option>
-                                        <option>CONSUMER</option>
-                                    </select>
+                                <label class="col-sm-4 control-label">Role*</label>
+                                <div class="col-sm-12">
+                                    <input type="text" class="form-control disabled" id="roleInput" value="@Model.Role" asp-for="Role" disabled>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">Username*</label>
-                                <div class="col-sm-10">
-                                    <input type="text" class="form-control" value="@Model.UserName">
+                                <div class="col-sm-12">
+                                    <input type="text" class="form-control" value="@Model.Username" asp-for="Username" disabled="@ViewBag.DelivererPreview">
+                                    <span asp-validation-for="Username" class="text-danger"></span>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-2 control-label">Full name*</label>
-                                <div class="col-sm-10">
-                                    <input type="text" class="form-control" value="@Model.Fullname">
+                                <label class="col-sm-2 control-label">Full name</label>
+                                <div class="col-sm-12">
+                                    <input type="text" class="form-control" value="@Model.Fullname" asp-for="Fullname" disabled="@ViewBag.DelivererPreview">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">Email*</label>
-                                <div class="col-sm-10">
-                                    <input type="text" class="form-control" value="@Model.Email">
+                                <div class="col-sm-12">
+                                    <input type="text" class="form-control" value="@Model.Email" asp-for="Email" disabled="@ViewBag.DelivererPreview">
+                                    <span asp-validation-for="Email" class="text-danger"></span>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-2 control-label">Address*</label>
-                                <div class="col-sm-10">
-                                    <input type="text" class="form-control" value="@Model.Address">
+                                <label class="col-sm-2 control-label">Address</label>
+                                <div class="col-sm-12">
+                                    <input type="text" class="form-control" value="@Model.Address" asp-for="Address" disabled="@ViewBag.DelivererPreview">
+                                    <span asp-validation-for="Address" class="text-danger"></span>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">Birthdate*</label>
-                                <div class="col-sm-10">
-                                    <input type="text" class="form-control" value="@Model.Birthdate">
+                                <div class="col-sm-12">
+                                    <input type="date" class="form-control" value="@Model.Birthdate.ToString("yyyy-MM-dd")" max="@max" asp-for="Birthdate" disabled="@ViewBag.DelivererPreview">
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="panel panel-default">
+                    <div class="panel panel-default" hidden="@ViewBag.DelivererPreview">
                         <div class="panel-heading">
                             <h4 class="panel-title">Security</h4>
                         </div>
                         <div class="panel-body">
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">Password*</label>
-                                <div class="col-sm-10">
-                                    <input type="password" class="form-control" value="@Model.Password">
+                                <div class="col-sm-12">
+                                    <input id="password" type="password" class="form-control" value="@Model.Password" asp-for="Password" disabled="@ViewBag.DelivererPreview">
+                                    <span asp-validation-for="Password" class="text-danger"></span>
                                 </div>
                             </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Confirm password*</label>
+                                <div class="col-sm-12">
+                                    <input id="confirmPassword" type="password" class="form-control" value="@Model.ConfirmPassword" asp-for="ConfirmPassword" disabled="@ViewBag.DelivererPreview">
+                                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-12">
+                                    <script type="text/javascript">
+                                        function ShowPasswords() {
+                                            var x = document.getElementById("password");
+                                            if (x.type === "password") {
+                                                x.type = "text";
+                                            } else {
+                                                x.type = "password";
+                                            }
+                                            var x = document.getElementById("confirmPassword");
+                                            if (x.type === "password") {
+                                                x.type = "text";
+                                            } else {
+                                                x.type = "password";
+                                            }
+                                        }
+                                    </script>
+                                    <input type="checkbox" onclick="ShowPasswords()"> Show Passwords
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-default" hidden="@ViewBag.DelivererPreview">
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-sm-12 form-group">
+                                    <script type="text/javascript">
+                                        function Submit() {
+                                            console.log(document.getElementById("roleInput").disabled);
+                                            document.getElementById("roleInput").disabled = false;
+                                            console.log(document.getElementById("roleInput").disabled);
+                                            document.getElementById("profileForm").submit();
+                                        }
+                                    </script>
+                                    <input type="button" class="btn btn-success btn-action" value="Submit" onclick="Submit()">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-body text-center">
+                            @{
+                                if (User.IsInRole("TEMP_DELIVERER") || User.IsInRole("DELIVERER") || User.IsInRole("ADMINISTRATOR"))
+                                {
+                                    if (Model.Role == "DELIVERER" || Model.Role == "TEMP_DELIVERER")
+                                    {
+                                        if (ViewBag.Status.ToString() == "APPROVED")
+                                        {
+                                            <p style="font-size: 20px"><u>This profile is <b class="text-success">approved</b> by administrators.</u></p>
+                                        }
+                                        else if (ViewBag.Status.ToString() == "PENDING")
+                                        {
+                                            <p style="font-size: 20px"><u>Administrators are <b class="text-warning">considering</b> whether to verify this profile.</u></p>
+                                        }
+                                        else
+                                        {
+                                            <p style="font-size: 20px"><u>This profile is <b class="text-danger">not approved</b> by administrators.</u></p>
+                                        }
+                                    }
+                                }
+                            }
                         </div>
                     </div>
                 </form>

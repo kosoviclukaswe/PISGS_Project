@@ -8,22 +8,22 @@
 <form method="post" enctype="multipart/form-data" asp-controller="Home" asp-action="SignUp">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <div class="mb-3">
-        <label asp-for="Username" for="username" class="form-label">Username</label>
+        <label asp-for="Username" for="username" class="form-label">Username*</label>
         <input asp-for="Username" id="username" type="text" class="form-control" />
         <span asp-validation-for="Username" class="text-danger"></span>
     </div>
     <div class="mb-3">
-        <label asp-for="Email" for="email" class="form-label">Email</label>
+        <label asp-for="Email" for="email" class="form-label">Email*</label>
         <input asp-for="Email" id="email" type="email" class="form-control" />
         <span asp-validation-for="Email" class="text-danger"></span>
     </div>
     <div class="mb-3">
-        <label asp-for="Password" for="password" class="form-label">Password</label>
+        <label asp-for="Password" for="password" class="form-label">Password*</label>
         <input asp-for="Password" id="password" type="password" class="form-control" />
         <span asp-validation-for="Password" class="text-danger"></span>
     </div>
     <div class="mb-3">
-        <label asp-for="ConfirmPassword" for="confirmPassword" class="form-label">Confirm password</label>
+        <label asp-for="ConfirmPassword" for="confirmPassword" class="form-label">Confirm password*</label>
         <input asp-for="ConfirmPassword" id="confirmPassword" type="password" class="form-control" />
         <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
     </div>
@@ -33,7 +33,7 @@
         <span asp-validation-for="Fullname" class="text-danger"></span>
     </div>
     <div class="mb-3">
-        <label asp-for="Birthdate" for="birthdate" class="form-label">Birthdate</label>
+        <label asp-for="Birthdate" for="birthdate" class="form-label">Birthdate*</label>
         <input asp-for="Birthdate" id="birthdate" type="date" value="@ageRestricted" max="@ageRestricted" class="form-control" />
         <span asp-validation-for="Birthdate" class="text-danger"></span>
     </div>
@@ -43,7 +43,7 @@
         <span asp-validation-for="Address" class="text-danger"></span>
     </div>
     <div class="mb-3">
-        <label asp-for="Role" for="role" class="form-label">Role</label>
+        <label asp-for="Role" for="role" class="form-label">Role*</label>
         <select asp-for="Role" class="form-control" name="role" id="role">
             <option value="DELIVERER">Deliverer</option>
             <option value="CONSUMER">Consumer</option>
@@ -81,7 +81,7 @@
             </script>
             <input type="file" name="imageFile" id="imageFile" onchange="uploadImage()">
             <img src="~/images/user.jpg" style="width: 340px; height: 340px;" alt="UserImage" id="userImage" />
-            <input asp-for="ImagePath" id="ImagePath" type="text" hidden>
+            <input asp-for="ImagePath" id="ImagePath" value="../images/user.jpg" type="text" hidden>
         </div>
     </div>
     <div class="mb-3">
@@ -89,10 +89,18 @@
     </div>
     <div class="row mb-3">
         <div class="col-md-6">
-            <a class="btn btn-outline-dark" href="/users/googleauth" role="button" style="text-transform:none">
+            <script type="text/javascript">
+                function SubmitGoogleSignUp() {
+                    document.getElementById("externalSignInForm").submit();
+                }
+            </script>
+            <a class="btn btn-outline-dark" role="button" style="text-transform:none" onclick="SubmitGoogleSignUp()">
                 <img style="margin-bottom:3px; margin-right:5px; width:20px; height: 20px;" alt="Google sign-in" src="~/images/google-logo.png" />
                 Sign Up with Google
             </a>
         </div>
     </div>
+</form>
+<form method="post" id="externalSignInForm" asp-controller="Home" asp-action="ExternalSignUp" asp-route-returnUrl ="@Model.ReturnUrl">
+    
 </form>

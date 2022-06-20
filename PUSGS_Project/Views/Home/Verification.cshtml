@@ -1,0 +1,91 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+@{
+    ViewData["Title"] = "Verification";
+}
+
+@model VerificationModel
+<div class="container-fluid">
+    <div class="row">
+        
+        <div class="col-sm-12">
+            @{
+                if (Model.Requests.Count == 0)
+                {
+                    <p>There are currently <b class="text-danger">no requests</b> in the database.</p>
+                }
+                else
+                {
+                    <p class="text-dark"><b>All requests (@Model.Requests.Count.ToString())</b></p>
+                    <table class="table table-dark">
+                        <tr>
+                            <th class="text-center">Submission date</th>
+                            <th class="text-center">Status</th>
+                            <th class="text-center">Link to profile</th>
+                            <th class="text-center">Approve/Disapprove</th>
+                        </tr>
+                        @{
+                            foreach (var request in Model.Requests)
+                            {
+                                <tr>
+                                    <td class="text-center">@request.Date.ToString("MMM/dd/yyyy")</td>
+                                    <td class="text-center">
+                                        @{
+                                            switch (request.Status)
+                                            {
+                                                case DataAcesss.Data.SignUpRequestStatus.PENDING:
+                                                    <b class="text-warning">@request.Status.ToString()</b>
+                                                    break;
+                                                case DataAcesss.Data.SignUpRequestStatus.APPROVED:
+                                                    <b class="text-success">@request.Status.ToString()</b>
+                                                    break;
+                                                case DataAcesss.Data.SignUpRequestStatus.DISAPPROVED:
+                                                    <b class="text-danger">@request.Status.ToString()</b>
+                                                    break;
+                                            }
+                                        }
+                                    </td>
+                                    <td class="text-center">
+                                        <a href="@Url.Action("DelivererPreview", "Home", new { userId = request.AppUserId, status = request.Status })">Preview</a>
+                                    </td>
+                                    <td class="text-center">
+                                        @{
+                                            if (request.Status == DataAcesss.Data.SignUpRequestStatus.PENDING)
+                                            {
+                                                <button class="btn-success mr-1" onclick="Approve(@request.SignUpRequestId, '@request.AppUserId', 'true')">Approve</button><button class="btn-danger" onclick="Approve(@request.SignUpRequestId, '@request.AppUserId', 'false')">Disapprove</button>
+                                            }
+                                            else if (request.Status == DataAcesss.Data.SignUpRequestStatus.APPROVED)
+                                            {
+                                                <button class="btn-danger" onclick="Approve(@request.SignUpRequestId, '@request.AppUserId', 'false')">Disapprove</button>
+                                            }
+                                            else
+                                            {
+                                                <button class="btn-success mr-1" onclick="Approve(@request.SignUpRequestId, '@request.AppUserId', 'true')">Approve</button>
+                                            }
+                                        }
+
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </table>
+                }
+            }
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    function Approve(id, userId, approved) {
+        document.getElementById("requestId").value = id;
+        document.getElementById("userId").value = userId;
+        document.getElementById("approved").value = approved;
+        document.getElementById("signUpRequestForm").submit();
+    }
+</script>
+<form id="signUpRequestForm" method="post" asp-controller="Home" asp-action="Verify" hidden>
+    <input type="number" id="requestId" name="id" />
+    <input type="text" id="userId" name="userId" />
+    <input type="text" id="approved" name="approved" />
+</form>

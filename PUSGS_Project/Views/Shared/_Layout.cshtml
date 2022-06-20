@@ -1,4 +1,8 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Identity;
+@using DataAcesss.Data; 
+@inject SignInManager<AppUser> _signInManager;
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -7,15 +11,21 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
 </head>
-<body>
+<body class="d-flex flex-column">
     <style>
-        :root{
-            --global-menu-height: 60px;
+
+        body {
+            min-height: 100vh;
         }
+
+        .flex-fill {
+            flex: 1 1 auto;
+        }
+
     </style>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3"
-             style="overflow: hidden; position: fixed; top: 0; width: 100%;">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-1"
+             style="overflow: hidden; top: 0; left: 0; width: 100%;">
             <div class="container-fluid">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Liman Restaurant</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
@@ -25,20 +35,65 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1 flex-row-reverse">
                         @{
-                            @*if (ViewData["Title"] as string != "My account" && true)
-            {
-                <li class="nav-item">
-                    <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Profile">My account</a>
-                </li>
-            }
-            else*@ if (ViewData["Title"] as string == "Home page" && true)
+                            if (!_signInManager.IsSignedIn(User))
+                            {
+                                if ((string)ViewData["Title"] == "Sign In")
+                                {
+                                    <li class="nav-item">
+                                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="SignUp">Sign Up</a>
+                                    </li>
+                                }
+                                if ((string)ViewData["Title"] == "Sign Up")
+                                {
+                                    <li class="nav-item">
+                                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="SignIn">Sign In</a>
+                                    </li>
+                                }
+                            }
+                            else
                             {
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="SignUp">Sign Up</a>
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="SignOut">Sign Out</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="SignIn">Sign In</a>
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Profile">My Profile</a>
                                 </li>
+                                if (User.IsInRole("ADMINISTRATOR"))
+                                {
+                                    <li class="nav-item">
+                                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Verification">Verification</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="AllOrders">All Orders</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="NewProduct">New Product</a>
+                                    </li>
+                                }
+                                else if (User.IsInRole("DELIVERER"))
+                                {
+                                    <li class="nav-item">
+                                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="MyOrders">My Orders</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="CheckCurrentOrder">Current Order</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="NewOrders">New Orders</a>
+                                    </li>
+                                }
+                                else if (User.IsInRole("CONSUMER"))
+                                {
+                                    <li class="nav-item">
+                                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="PreviousOrders">Previous Orders</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="ActiveOrders">Active Orders</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="NewOrder">New Order</a>
+                                    </li>
+                                }
                             }
                         }
                     </ul>
@@ -46,11 +101,10 @@
             </div>
         </nav>
     </header>
-    <div class="container" style="margin-top: var(--global-menu-height)">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
+
+    <main role="main" class="container-fluid p-0 pb-3 mt-1 mb-1" style="align-items: stretch;">
+        @RenderBody()
+    </main>
 
     <footer class="border-top footer text-muted">
         <div class="container-fluid">

@@ -1,0 +1,95 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["Title"] = "All Orders";
+}
+
+@using DataAcesss.Data
+@model PUSGS_Project.Models.ActiveOrdersModel
+<style>
+    tr:hover {
+        background-color: #1f0160;
+    }
+</style>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-12">
+            @{
+                if (Model == null || Model.Orders == null || Model.Orders.Count == 0)
+                {
+                    <p>Currently, there is <b class="text-danger">no orders</b> in database.</p>
+                }
+                else
+                {
+                    <label for="previousOrdersTable"><b>All orders (@Model.Orders.Count.ToString())</b></label>
+                    <table class="table table-dark" id="previousOrdersTable">
+                        <tr>
+                            <th class="text-center">Address</th>
+                            <th class="text-center">Price</th>
+                            <th class="text-center">Comment</th>
+                            <th class="text-center">Time (minutes)</th>
+                            <th class="text-center">Order Status</th>
+                            <th class="text-center">Products</th>
+                        </tr>
+                        @{
+                            foreach (Order order in Model.Orders)
+                            {
+                                <tr id="@order.OrderId">
+                                    <td class="text-center">@order.Address</td>
+                                    <td class="text-center">@order.Price.ToString()</td>
+                                    <td class="text-center">@order.Comment</td>
+                                    <td class="text-center">@order.Time.ToString()</td>
+                                    <td class="text-center">
+                                        @{
+                                            OrderState status = order.OrderState;
+                                            switch (status)
+                                            {
+                                                case OrderState.ACTIVE:
+                                                    <b class="text-primary">Taken</b>
+                                                    break;
+                                                case OrderState.COMPLETE:
+                                                    <b class="text-success">Delivered</b>
+                                                    break;
+                                                case OrderState.INCOMPLETE:
+                                                    <b class="text-danger">Canceled</b>
+                                                    break;
+                                                case OrderState.ON_HOLD:
+                                                    <b class="text-warning">Pending</b>
+                                                    break;
+                                                default:
+                                                    break;
+                                            }
+                                        }
+                                    </td>
+
+
+                                    <td class="text-left">
+                                        @{
+                                            if (Model.Products != null && Model.Products.Count > 0)
+                                            {
+                                                <ul>
+                                                    @{
+                                                        foreach (var productData in Model.Products[order.OrderId])
+                                                        {
+                                                            <li>@productData.Key.Name x @productData.Value</li>
+                                                        }
+                                                    }
+                                                </ul>
+                                            }
+                                            else
+                                            {
+                                                <p class="text-danger">No products available.</p>
+                                            }
+                                        }
+
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </table>
+                }
+            }
+        </div>
+    </div>
+</div>

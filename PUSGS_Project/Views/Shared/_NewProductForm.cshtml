@@ -1,0 +1,83 @@
+﻿@model PUSGS_Project.Models.NewProductModel
+<form method="post" asp-action="NewProduct" asp-controller="Home">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="row">
+        <div class="col-sm-12 form-group">
+            <label for="name">Name*</label>
+            <input asp-for="Name" type="text" class="form-control" id="name" name="name" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12 form-group">
+            <label for="price">Price*</label>
+            <input asp-for="Price" type="number" class="form-control" id="price" name="price" />
+            <span asp-validation-for="Price" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-8 form-group">
+            <label for="addIngridient">Add Ingridient (minimum 1)*</label>
+            <input type="text" placeholder="Enter a name of the ingridient..." id="nameOfIngridient" class="form-control">
+        </div>
+        <div class="col-sm-2 form-group">
+            <label for="addIngridient"></label>
+            <input type="button" class="btn btn-dark mt-2" id="addIngridient" value="Add" style="width: 100%;" onclick="AddIngridient()" />
+        </div>
+        <div class="col-sm-2 form-group">
+            <label for="removeIngridient"></label>
+            <input type="button" class="btn btn-dark mt-2" id="removeIngridient" value="Remove" style="width: 100%;" onclick="RemoveIngridient()" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12 form-group">
+            <script type="text/javascript">
+                function AddIngridient() {
+                    var nameOfIngridient = document.getElementById('nameOfIngridient').value;
+
+                    if (nameOfIngridient == "") {
+                        return;
+                    }
+
+                    document.getElementById('ingridients').value += "|" + nameOfIngridient;
+
+                    var node = document.createElement('li');
+                    node.appendChild(document.createTextNode(nameOfIngridient));
+
+                    document.getElementById('ingridientsList').appendChild(node);
+                }
+                function RemoveIngridient() {
+                    var oldValue = document.getElementById('ingridients').value;
+                    var nameOfIngridient = document.getElementById('nameOfIngridient').value;
+                    if (nameOfIngridient == "") {
+                        return;
+                    }
+                    document.getElementById('ingridients').value = oldValue.replace('|' + nameOfIngridient, '');
+
+                    var listElements = document.querySelectorAll("#ingridientsList li");
+
+                    for (var i = 0; (li = listElements[i]); i++) {
+                        console.log("list item: " + li.innerHTML);
+                        console.log("name: " + nameOfIngridient);
+                        if (li.innerHTML == nameOfIngridient) {
+                            li.parentNode.removeChild(li);
+                            break;
+                        }
+                    }
+                }
+            </script>
+            <ul id="ingridientsList">
+            </ul>
+        </div>
+    </div>
+    <div class="row" hidden>
+        <div class="col-sm-12 form-group">
+            <input asp-for="Ingridients" type="text" name="ingridients" id="ingridients" value="" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12 form-group">
+            <input type="submit" class="btn btn-success" value="Submit" />
+        </div>
+    </div>
+</form>

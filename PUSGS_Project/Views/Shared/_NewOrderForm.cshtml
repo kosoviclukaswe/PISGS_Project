@@ -1,0 +1,162 @@
+﻿@model PUSGS_Project.Models.NewOrderModel
+@using DataAcesss.Data;
+<div class="container" onload="RefreshProducts()">
+    <form id="newOrderForm" method="post" asp-action="NewOrder" asp-controller="Home">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <script type="text/javascript">
+
+            function RefreshProducts() {
+                document.getElementById("products").value = "";
+                console.log(document.getElementById("products").value);
+            }
+
+            productList = new Object();
+
+            function Add(productName, price) {
+
+                var productsRowEl = document.getElementById("productsRow");
+
+                if (productsRowEl.hidden) {
+                    productsRowEl.hidden = false;
+                }
+
+                var products = document.getElementById("products");
+                products.value += "|" + productName;
+
+                console.log(document.getElementById("products").value);
+
+                if (productList[productName] == null) {
+                    productList[productName] = 1;
+
+                    var node = document.createElement('li');
+                    node.id = productName;
+                    node.appendChild(document.createTextNode(productName + "    x   1"));
+
+                    document.getElementById('productsList').appendChild(node);
+                }
+                else {
+                    productList[productName] += 1;
+
+                    var lis = document.getElementById('productsList').children;
+                    var child = null;
+                    for (var i = 0; i < lis.length; i++) {
+                        if (lis[i].id == productName) {
+                            child = lis[i];
+                            break;
+                        }
+                    }
+                    if (child != null) {
+                        document.getElementById('productsList').removeChild(child);
+                    }
+
+                    var node = document.createElement('li');
+                    node.id = productName;
+                    var number = productList[productName];
+                    node.appendChild(document.createTextNode(productName + "    x   " + number));
+
+                    document.getElementById('productsList').appendChild(node);
+                }
+
+                var newPrice = parseInt(document.getElementById("price").value);
+                newPrice += price;
+                document.getElementById("price").value = newPrice;
+            }
+
+            function Remove(productName, price) {
+
+                if (productList[productName] != null) {
+                    if (productList[productName] > 0) {
+                        productList[productName] -= 1;
+
+                        var products = document.getElementById("products").value;
+                        document.getElementById("products").value = products.replace("|" + productName, "");
+
+                        console.log(document.getElementById("products").value);
+
+                        var lis = document.getElementById('productsList').children;
+                        var child = null;
+                        for (var i = 0; i < lis.length; i++) {
+                            if (lis[i].id == productName) {
+                                child = lis[i];
+                                break;
+                            }
+                        }
+                        if (child != null) {
+                            document.getElementById('productsList').removeChild(child);
+                        }
+
+                        if (productList[productName] > 0) {
+                            var node = document.createElement('li');
+                            node.id = productName;
+                            var number = productList[productName];
+                            node.appendChild(document.createTextNode(productName + "    x   " + number));
+
+                            document.getElementById('productsList').appendChild(node);
+                        }
+
+                        var newPrice = parseInt(document.getElementById("price").value);
+                        newPrice -= price;
+                        document.getElementById("price").value = newPrice;
+                    }
+                }
+
+                var products = document.getElementById("products");
+                if (products.value == "") {
+                    var productsRowEl = document.getElementById("productsRow");
+                    productsRowEl.hidden = true;
+                }
+            }
+
+            function Submit() {
+                document.getElementById("price").disabled = false;
+                document.getElementById("newOrderForm").submit();
+            }
+
+        </script>
+        <div class="row" id="productsRow" hidden>
+            <div class="col-sm-12 form-group">
+                <label>List of products*</label>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <ul id="productsList">
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <input asp-for="Products" id="products" type="text" hidden>
+
+        <div class="row" id="addressRow">
+            <div class="col-sm-12 form-group">
+                <label for="name">Address*</label>
+                <input asp-for="Address" type="text" class="form-control" id="address" name="address" />
+                <span asp-validation-for="Address" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="row" id="fixedPriceRow">
+            <div class="col-sm-12 form-group">
+                <label for="name">Delivery price</label>
+                <input asp-for="Price" type="number" class="form-control" id="fixedPrice" name="fixedPrice" value="@NewOrderModel.FixedPrice" disabled />
+            </div>
+        </div>
+        <div class="row" id="priceRow">
+            <div class="col-sm-12 form-group">
+                <label for="name">Total price</label>
+                <input asp-for="Price" type="number" class="form-control" id="price" name="price" value="@NewOrderModel.FixedPrice" disabled />
+            </div>
+        </div>
+        <div class="row" id="commentRow">
+            <div class="col-sm-12 form-group">
+                <label for="name">Comment</label>
+                <input asp-for="Comment" type="text" class="form-control" id="comment" name="comment" />
+            </div>
+        </div>
+        <div class="row" id="submitRow">
+            <div class="col-sm-12 form-group">
+                <input type="button" class="btn btn-success" value="Submit" onclick="Submit()" />
+            </div>
+        </div>
+    </form>
+</div>
+ 

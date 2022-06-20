@@ -20,38 +20,6 @@ namespace ServiceLayer.Services
         {
             _mapper = mapper;
             _userRepository = userRepository;
-
-        }
-
-        public bool Create(AppUserDto user)
-        {
-            var newUser = _mapper.Map<AppUserDto, AppUser>(user);
-            return _userRepository.Create(newUser);
-        }
-
-        public AppUserDto Delete(string id)
-        {
-            var user = _userRepository.Delete(id);
-            return _mapper.Map<AppUser, AppUserDto>(user);
-        }
-
-        public AppUserDto Read(string id)
-        {
-            var user = _userRepository.Read(id);
-            return _mapper.Map<AppUser, AppUserDto>(user);
-        }
-
-        public List<AppUserDto> ReadAll()
-        {
-            var users = _userRepository.ReadAll();
-            return _mapper.Map<List<AppUser>, List<AppUserDto>>(users);
-        }
-
-        public AppUserDto Update(AppUserDto user)
-        {
-            var updatingUser = _mapper.Map<AppUserDto, AppUser>(user);
-            _userRepository.Update(updatingUser);
-            return user;
         }
     }
 }

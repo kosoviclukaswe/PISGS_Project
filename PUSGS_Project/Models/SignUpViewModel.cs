@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -20,14 +21,15 @@ namespace PUSGS_Project.Models
         [DataType(DataType.Password)]
         [Compare("Password")]
         public string ConfirmPassword { get; set; }
-        [Required(ErrorMessage = "Name and surname are required")]
         public string Fullname { get; set; }
         [Required]
         public DateTime Birthdate { get; set; }
         [Required]
         public string Address { get; set; }
-        public string ImagePath { get; set; } = @"images\user.jpg";
+        public string ImagePath { get; set; } = @"../images/user.jpg";
         [Required]
         public string Role { get; set; }
+        public string ReturnUrl { get; set; }
+        public IList<AuthenticationScheme> ExternalSignUp { get; set; }
     }
 }

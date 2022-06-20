@@ -1,0 +1,44 @@
+﻿@using DataAcesss.Data;
+@{ 
+    var products = ViewData["products"] as List<Product>;
+}
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12">
+            <h6>
+                Available products(@products.Count.ToString())
+            </h6>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <table class="table table-dark">
+                <tr>
+                    <th class="text-center">Name</th>
+                    <th class="text-center">Price</th>
+                    <th class="text-center">Ingridients</th>
+                    <th class="text-center">+/-</th>
+                </tr>
+                @{
+                    foreach (Product product in products)
+                    {
+                        <tr>
+                            <td class="text-center">@product.Name</td>
+                            <td class="text-center">@product.Price.ToString()</td>
+                            <td class="text-center">@product.Ingridients.Remove(0, 1).Replace('|', ',')</td>
+                            <td class="text-center">
+                                <button class="btn btn-light" onclick="Add('@product.Name', @product.Price)">+</button>
+                                <button class="btn btn-light" onclick="Remove('@product.Name', @product.Price)">-</button>
+                            </td>
+                        </tr>
+                    }
+                }
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+
+

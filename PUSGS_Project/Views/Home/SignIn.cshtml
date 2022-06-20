@@ -1,6 +1,7 @@
 ﻿@{
-    ViewData["Title"] = "SignUp";
+    ViewData["Title"] = "Sign In";
 }
+@model SignInViewModel
 <head>
 </head>
 <body>
@@ -10,7 +11,22 @@
                 <div class="text-center h3">
                     Sign In
                 </div>
-                <partial name="../Shared/_SignInForm.cshtml" />
+                <form method="post" asp-controller="Home" asp-action="SignIn">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="mb-3">
+                        <label asp-for="Username" for="username" class="form-label">Username</label>
+                        <input asp-for="Username" id="username" type="text" class="form-control" />
+                        <span asp-validation-for="Username" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Password" for="password" class="form-label">Password</label>
+                        <input asp-for="Password" id="password" type="password" class="form-control" />
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <button type="submit" class="btn btn-primary">Sign In</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
